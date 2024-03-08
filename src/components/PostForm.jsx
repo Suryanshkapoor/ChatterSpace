@@ -44,7 +44,7 @@ const PostForm = ({ post }) => {
         document.getElementById("tags").value = "";
         document.getElementById("location").value = "";
         setMediaUrl("");
-        navigate(`/posts/${post.$id}`);
+        navigate(`/posts/${newPost?.$id}`);
       }
     }else{
       const updatedPost = await updatePost({

@@ -170,7 +170,7 @@ export async function deletePost(id) {
   await databases.deleteDocument(
     appwriteConfig.databaseId,
     appwriteConfig.postsCollectionId,
-    id,
+    id
   );
   return { status: "ok" };
 }
@@ -193,11 +193,7 @@ export async function getFilePreview(fileId) {
   try {
     const fileUrl = await storage.getFilePreview(
       appwriteConfig.storageId,
-      fileId,
-      2000,
-      2000,
-      "top",
-      100
+      fileId
     );
 
     if (!fileUrl) throw Error;
@@ -284,9 +280,175 @@ export async function getPostbyId(postId) {
       appwriteConfig.postsCollectionId,
       postId
     );
+
     if (!post) throw Error;
 
     return post;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getInfinitePosts(pageParam) {
+  const queries = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      queries
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function searchPosts(searchTerm) {
+  const query1 = [Query.search("caption", searchTerm)];
+  const query2 = [Query.search("location", searchTerm)];
+  try {
+    const posts1 = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      query1
+    );
+    const posts2 = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      query2
+    );
+    const uniquePostIds = new Set([
+      ...posts1.documents.map((post) => post.$id),
+      ...posts2.documents.map((post) => post.$id),
+    ]);
+    const uniquePosts = [];
+
+    for (const postId of uniquePostIds) {
+      const post = await getPostbyId(postId);
+      uniquePosts.push(post);
+    }
+
+    return uniquePosts;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getUserPosts(userId) {
+  if (!userId) return;
+
+  try {
+    const post = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+    );
+
+    if (!post) throw Error;
+
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUsers(limit) {
+  const queries = [Query.orderDesc("$createdAt")];
+
+  if (limit) {
+    queries.push(Query.limit(limit));
+  }
+
+  try {
+    const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      queries
+    );
+
+    if (!users) throw Error;
+
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getUserById(userId) {
+  try {
+    const user = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId
+    );
+
+    if (!user) throw Error;
+
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateUser(user) {
+  const hasFileToUpdate = user.file.length > 0;
+  try {
+    let image = {
+      imageUrl: user.imageUrl,
+      imageId: user.imageId,
+    };
+
+    if (hasFileToUpdate) {
+      // Upload new file to appwrite storage
+      const uploadedFile = await uploadFile(user.file[0]);
+      if (!uploadedFile) throw Error;
+
+      // Get new file url
+      const fileUrl = getFilePreview(uploadedFile.$id);
+      if (!fileUrl) {
+        await deleteFile(uploadedFile.$id);
+        throw Error;
+      }
+
+      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+    }
+
+    //  Update user
+    const updatedUser = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      user.userId,
+      {
+        name: user.name,
+        bio: user.bio,
+        imageUrl: image.imageUrl,
+        imageId: image.imageId,
+      }
+    );
+
+    // Failed to update
+    if (!updatedUser) {
+      // Delete new file that has been recently uploaded
+      if (hasFileToUpdate) {
+        await deleteFile(image.imageId);
+      }
+      // If no new file uploaded, just throw error
+      throw Error;
+    }
+
+    // Safely delete old file after successful update
+    if (user.imageId && hasFileToUpdate) {
+      await deleteFile(user.imageId);
+    }
+
+    return updatedUser;
   } catch (error) {
     console.log(error);
   }

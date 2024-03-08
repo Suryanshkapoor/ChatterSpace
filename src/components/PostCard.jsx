@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import save from "../assets/save.svg";
 import edit from "../assets/edit.svg";
@@ -18,12 +18,13 @@ import {
 const PostCard = ({ post, userId }) => {
   const { mutate: savePost } = useSavePost();
   const { mutate: unsavePost } = useUnsavePost();
-
   const { mutate: likePost } = useLikePost();
 
   const { data: user } = useGetCurrentUser();
 
   const savedPostRecord = user?.save.find((item) => item.post.$id === post.$id);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
@@ -35,7 +36,7 @@ const PostCard = ({ post, userId }) => {
   const [isSaved, setIsSaved] = useState(false);
 
   const handleLikePost = async () => {
-    var likesArray = [...likesList];
+    var likesArray = [...likes];
 
     if (likesArray.includes(userId)) {
       likesArray = likesArray.filter((obj) => obj !== userId);
@@ -98,19 +99,23 @@ const PostCard = ({ post, userId }) => {
       <div className="flex flex-1 justify-between items-center">
         <div className="flex w-full flex-col gap-3">
           <div className="flex justify-between">
-            <Link to={`/profile/${post.creator.$id}`} >
+            <Link to={`/profile/${post.creator.$id}`}>
               <div className="flex gap-2">
                 <img
-                src={post.creator.imageUrl}
-                alt=""
-                className="rounded-full w-10 h-10"
-              />
-              <div className="flex flex-col justify-center">
-                <h5 className="flex text-lg font-bold tracking-tight text-violet-500 ">
-                  {post.creator.name}
-                </h5>
-                <p className="text-xs text-gray-400">{formatRelativeDate(post.$createdAt)} {post.location&&`- ${post.location}`}</p>
-              </div></div>
+                  src={post.creator.imageUrl}
+                  alt=""
+                  className="rounded-full w-10 h-10"
+                />
+                <div className="flex flex-col justify-center">
+                  <h5 className="flex text-lg font-bold tracking-tight text-violet-500 ">
+                    {post.creator.name}
+                  </h5>
+                  <p className="text-xs text-gray-400">
+                    {formatRelativeDate(post.$createdAt)}{" "}
+                    {post.location && `- ${post.location}`}
+                  </p>
+                </div>
+              </div>
             </Link>
             <Link
               className={
@@ -123,13 +128,14 @@ const PostCard = ({ post, userId }) => {
               <img src={edit} width={22} alt="edit" /> Edit
             </Link>
           </div>
-          <div>
-            <img
-              className="rounded-t-lg"
-              src={post.imageUrl || placeholder}
-              alt=""
-            />
-          </div>
+          <img
+            className="rounded-t-lg cursor-pointer"
+            src={post.imageUrl || placeholder}
+            alt=""
+            onClick={() => {
+              navigate(`/posts/${post.$id}`);
+            }}
+          />
           <div className="w-full p-5">
             <div className="flex justify-between items-center">
               <div className="flex w-full justify-between">

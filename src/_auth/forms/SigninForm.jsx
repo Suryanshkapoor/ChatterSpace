@@ -41,11 +41,11 @@ const SigninForm = () => {
     <>
       <section>
         <div className="flex flex-col items-center justify-center px-14 py-8 mx-auto md:h-screen lg:py-0">
-          <span className="flex items-center mb-4 text-3xl font-bold text-white">
-            <img className="h-16 mr-2" src={logo} alt="logo" />
+          <span className="flex items-center mb-4 text-3xl font-bold text-violet-600">
+            <img className="h-16 mr-2 " src={logo} alt="logo" />
             Chatter Space
           </span>
-          <div className="w-full border rounded-lg bg-gray-800 md:mt-0 sm:max-w-md xl:p-0">
+          <div className="w-full border border-violet-950 rounded-lg bg-gray-800 md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight -mb-7 text-white md:text-2xl">
                 Login an Account
@@ -107,7 +107,7 @@ const SigninForm = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                  className="w-full text-white bg-violet-600 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                 >
                   {loading || isLoading ? (<>
                     <img src={loader} width={25} height={25} alt="loading..." className="inline mr-2" /><span>please wait...</span>
