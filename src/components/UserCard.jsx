@@ -12,11 +12,11 @@ const UserCard = ({ user }) => {
       />
 
       <div className="flex justify-center items-center flex-col gap-1">
-        <p className="text-[16px] font-medium leading-[140%] text-white text-center line-clamp-1">
+        <p className="text-[16px] font-medium leading-[140%] text-white text-center line-clamp-1 capitalize">
           {user.name}
         </p>
-        <p className="text-[14px] font-normal leading-[140%] text-gray-300 text-center line-clamp-1">
-          @{user.email}
+        <p className="text-[14px] font-normal leading-[140%] text-gray-500 text-center line-clamp-1">
+          Id : {user.email}
         </p>
       </div>
 

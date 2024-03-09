@@ -76,7 +76,7 @@ const SignupForm = () => {
             <img className="h-16 mr-2" src={logo} alt="logo" />
             Chatter Space
           </span>
-          <div className="w-full border border-violet-950 rounded-lg bg-gray-800 md:mt-0 sm:max-w-md xl:p-0">
+          <div className="w-full border border-violet-950 rounded-2xl bg-zinc-950 md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl">
                 Create an Account

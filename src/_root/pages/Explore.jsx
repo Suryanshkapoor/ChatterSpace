@@ -19,7 +19,6 @@ const Explore = () => {
   const debouncedValue = useDebounce(searchValue, 500);
 
   const { data: searchedPosts, isFetching: isFetching } = useSearchPosts(debouncedValue)
-  console.log(searchedPosts)
   
 
   if (!posts) {

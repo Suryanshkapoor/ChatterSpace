@@ -26,8 +26,8 @@ const PostDetails = () => {
 
 
   const { mutate: deletePost } = useDeletePost();
-  const { mutate: savePost } = useSavePost();
-  const { mutate: unsavePost } = useUnsavePost();
+  const { mutate: savePost, isPending: isSaving} = useSavePost();
+  const { mutate: unsavePost, isPending: isUnsaving } = useUnsavePost();
   const { mutate: likePost } = useLikePost();
 
   const { data: user } = useGetCurrentUser();
@@ -60,13 +60,10 @@ const PostDetails = () => {
     if (savedPostRecord) {
       setIsSaved(false);
       unsavePost(savedPostRecord.$id);
-      console.log("unsaved");
-
       return;
     }
 
     savePost({postId:post.$id , userId:user.$id});
-    console.log("saved");
     setIsSaved(true);
   };
 
@@ -75,7 +72,7 @@ const PostDetails = () => {
   };
 
   const handleDeletePost = () => {
-    deletePost(id);
+    deletePost({id:id,fileId:post.imageId});
     navigate('/')
   }
 
@@ -112,11 +109,11 @@ const PostDetails = () => {
       {isLoading ? (
         <img src={loader} alt="Loading" />
       ) : (
-        <div className="bg-zinc-950 w-full max-w-5xl p-3 rounded-[30px] flex-col flex xl:flex-row border border-violet-600 xl:rounded-l-[24px];">
+        <div className="bg-zinc-950 w-full max-w-5xl p-3 rounded-[30px] flex-col flex lg:flex-row border border-violet-600 xl:rounded-l-[24px];">
           <img
             src={post?.imageUrl}
             alt="post"
-            className=" mx-auto w-11/12 md:max-w-[625px] rounded-t-[30px] xl:rounded-l-[24px] xl:rounded-tr-none xl:w-3/5 object-cover p-5 bg-dark-1"
+            className=" mx-auto w-11/12 md:max-w-[625px] rounded-t-[30px] lg:rounded-l-[24px] lg:rounded-tr-none lg:w-3/5 object-cover p-5 bg-dark-1"
           />
           <div className="flex flex-col xl:justify-between gap-5 lg:gap-7 flex-1 items-start py-4 rounded-[30px] px-8">
             <div className="flex flex-col w-full">
@@ -155,7 +152,11 @@ const PostDetails = () => {
                     src={remove}
                     width={22}
                     alt="edit"
-                    className="cursor-pointer"
+                    className={
+                      post?.creator.$id !== user?.$id
+                        ? "hidden"
+                        : "cursor-pointer"
+                    }
                     onClick={() => handleDeletePost()}
                   />
                 </div>
@@ -197,14 +198,22 @@ const PostDetails = () => {
                 </span>
               </div>
               <div>
-                <img
-                  onClick={handleSavePost}
-                  src={isSaved ? saved : save}
-                  width={24}
-                  height={24}
-                  alt="saved"
-                  className="cursor-pointer"
-                />
+              {isSaving || isUnsaving ?(
+                    <img
+                    src={loader}
+                    width={24}
+                    height={24}
+                    alt="saved"/>
+                ):(
+                  <img
+                    onClick={handleSavePost}
+                    src={isSaved ? saved : save}
+                    width={24}
+                    height={24}
+                    alt="saved"
+                    className="cursor-pointer"
+                  />
+                )}
               </div>
             </div>
           </div>

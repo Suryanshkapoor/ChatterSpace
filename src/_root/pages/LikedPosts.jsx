@@ -19,7 +19,7 @@ const LikedPosts = () => {
       )}
       <ul className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl mb-14">
         {currentUser.liked.map((post) => (
-          <Posts post={post} showStats={true} showUser={true} />
+          <Posts key={post.$id} post={post} showStats={true} showUser={true} />
         ))}
       </ul>
     </>

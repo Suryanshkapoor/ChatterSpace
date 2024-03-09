@@ -125,6 +125,7 @@ export async function updatePost(post) {
     let image = { imageId: post.imageId, imageUrl: post.imageUrl };
 
     if (hasFileToUpdate) {
+      await deleteFile(image.imageId)
       const uploadedFile = await uploadFile(post.file[0]);
 
       if (!uploadedFile) throw Error;
@@ -166,7 +167,8 @@ export async function updatePost(post) {
   }
 }
 
-export async function deletePost(id) {
+export async function deletePost(id,fileId) {
+  await deleteFile(fileId);
   await databases.deleteDocument(
     appwriteConfig.databaseId,
     appwriteConfig.postsCollectionId,

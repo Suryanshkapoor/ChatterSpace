@@ -45,7 +45,7 @@ const SigninForm = () => {
             <img className="h-16 mr-2 " src={logo} alt="logo" />
             Chatter Space
           </span>
-          <div className="w-full border border-violet-950 rounded-lg bg-gray-800 md:mt-0 sm:max-w-md xl:p-0">
+          <div className="w-full border border-violet-950 rounded-2xl bg-zinc-950 md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight -mb-7 text-white md:text-2xl">
                 Login an Account
@@ -89,21 +89,6 @@ const SigninForm = () => {
                   />
                 </div>
                 <div className="flex items-start mb-5">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="remember"
-                      name="remember"
-                      type="checkbox"
-                      value=""
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 "
-                    />
-                  </div>
-                  <label
-                    htmlFor="remember"
-                    className="ms-2 text-sm font-medium text-white"
-                  >
-                    Remember Me
-                  </label>
                 </div>
                 <button
                   type="submit"

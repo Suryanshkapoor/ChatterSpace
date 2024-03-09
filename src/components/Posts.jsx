@@ -51,7 +51,6 @@ const Posts = ({ post, showUser, showStats }) => {
     if (savedPostRecord) {
       setIsSaved(false);
       unsavePost(savedPostRecord.$id);
-
       return;
     }
 
@@ -80,7 +79,7 @@ const Posts = ({ post, showUser, showStats }) => {
               alt="creator"
               className="w-8 h-8 rounded-full"
             />
-            <p className="line-clamp-1">{post.creator?.name}</p>
+            <p className="line-clamp-1 capitalize">{post.creator?.name}</p>
           </div>
         )}
         {showStats && (
@@ -96,12 +95,10 @@ const Posts = ({ post, showUser, showStats }) => {
 
             {isSaving || isUnsaving ? (
               <img
-                onClick={handleSavePost}
                 src={loader}
                 width={24}
                 height={24}
                 alt="saved"
-                className="cursor-pointer"
               />
             ) : (
               <img

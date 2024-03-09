@@ -67,6 +67,14 @@ const PostForm = ({ post }) => {
     }
   }
 
+  const handleCancel = () => {
+    document.getElementById("caption").value = "";
+        document.getElementById("tags").value = "";
+        document.getElementById("location").value = "";
+        setMediaUrl("");
+        navigate(`/posts/${post.$id}`);
+  }
+
   return (
     <form
       onSubmit={(e) => handleSubmit(e)}
@@ -136,6 +144,7 @@ const PostForm = ({ post }) => {
         <button
           type="button"
           className="py-2 px-5 mb-2 text-sm font-medium rounded-lg border bg-gray-800 text-gray-400 border-gray-600 hover:text-white hover:bg-gray-700"
+          onClick={()=>handleCancel()}
         >
           Cancel
         </button>

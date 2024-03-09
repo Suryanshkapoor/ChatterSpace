@@ -6,6 +6,7 @@ import edit from "../assets/edit.svg";
 import saved from "../assets/saved.svg";
 import like from "../assets/like.svg";
 import liked from "../assets/liked.svg";
+import loader from "../assets/loader.svg";
 import placeholder from "../assets/profile-placeholder.svg";
 
 import {
@@ -16,8 +17,8 @@ import {
 } from "../react-query/queriesAndMutations";
 
 const PostCard = ({ post, userId }) => {
-  const { mutate: savePost } = useSavePost();
-  const { mutate: unsavePost } = useUnsavePost();
+  const { mutate: savePost ,isPending: isSaving} = useSavePost();
+  const { mutate: unsavePost, isPending: isUnsaving } = useUnsavePost();
   const { mutate: likePost } = useLikePost();
 
   const { data: user } = useGetCurrentUser();
@@ -52,13 +53,11 @@ const PostCard = ({ post, userId }) => {
     if (savedPostRecord) {
       setIsSaved(false);
       unsavePost(savedPostRecord.$id);
-      console.log("unsaved");
 
       return;
     }
 
     savePost({ postId: post.$id, userId: userId });
-    console.log("saved");
     setIsSaved(true);
   };
 
@@ -107,7 +106,7 @@ const PostCard = ({ post, userId }) => {
                   className="rounded-full w-10 h-10"
                 />
                 <div className="flex flex-col justify-center">
-                  <h5 className="flex text-lg font-bold tracking-tight text-violet-500 ">
+                  <h5 className="flex text-lg font-bold tracking-tight text-violet-500 capitalize">
                     {post.creator.name}
                   </h5>
                   <p className="text-xs text-gray-400">
@@ -154,6 +153,13 @@ const PostCard = ({ post, userId }) => {
                   </span>
                 </div>
                 <div>
+                {isSaving || isUnsaving ?(
+                    <img
+                    src={loader}
+                    width={24}
+                    height={24}
+                    alt="saved"/>
+                ):(
                   <img
                     onClick={handleSavePost}
                     src={isSaved ? saved : save}
@@ -162,10 +168,12 @@ const PostCard = ({ post, userId }) => {
                     alt="saved"
                     className="cursor-pointer"
                   />
+                )}
+                  
                 </div>
               </div>
             </div>
-            <p className="my-3 font-normal text-gray-400">
+            <p className="my-3 font-normal text-gray-400 capitalize">
               {post.caption && `${post.creator.name} - ${post.caption}`}
             </p>
             <div>

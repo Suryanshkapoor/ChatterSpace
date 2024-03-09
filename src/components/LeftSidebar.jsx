@@ -37,7 +37,7 @@ const LeftSidebar = () => {
             alt="Profile"
           />
           <div className="flex flex-col">
-            <p className="font-semibold">{user.name}</p>
+            <p className="font-semibold capitalize">{user.name}</p>
             <p className="text-xs font-medium text-gray-400">{user.email}</p>
           </div>
         </Link>
