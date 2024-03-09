@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
     
       checkAuthUser();
     
-  },[navigate])
+  },[])
   
   const checkAuthUser = async() =>{
     try {
