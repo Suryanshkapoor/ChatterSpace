@@ -20,10 +20,9 @@ const Explore = () => {
 
   const { data: searchedPosts, isFetching: isFetching } = useSearchPosts(debouncedValue)
   
-
   if (!posts) {
     return (
-      <div>
+      <div className="flex flex-1 flex-col items-center mt-14">
         <img src={loader} width={40} height={40} alt="loading" />
       </div>
     );
@@ -35,7 +34,7 @@ const Explore = () => {
     posts.pages.every((item) => item.documents.length === 0);
 
   return (
-    <div className="flex flex-col flex-1 items-center overflow-scroll py-10 px-5 md:p-14 custom-scrollbar">
+    <div className="flex flex-col flex-1 items-center overflow-y-scroll py-10 px-5 md:p-14 custom-scrollbar">
       <div className="max-w-5xl flex flex-col items-center w-full gap-6 md:gap-9">
         <h2 className="w-full text-[24px] font-bold leading-[140%] tracking-tighter">
           Explore

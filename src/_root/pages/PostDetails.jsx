@@ -24,15 +24,16 @@ const PostDetails = () => {
 
   const { data: post, isPending: isLoading } = useGetPostbyId(id);
 
-
   const { mutate: deletePost } = useDeletePost();
-  const { mutate: savePost, isPending: isSaving} = useSavePost();
+  const { mutate: savePost, isPending: isSaving } = useSavePost();
   const { mutate: unsavePost, isPending: isUnsaving } = useUnsavePost();
-  const { mutate: likePost } = useLikePost();
+  const { mutate: likePost, isPending } = useLikePost();
 
   const { data: user } = useGetCurrentUser();
 
-  const savedPostRecord = user?.save.find((item) => item.post?.$id === post?.$id);
+  const savedPostRecord = user?.save.find(
+    (item) => item.post?.$id === post?.$id
+  );
 
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
@@ -52,7 +53,7 @@ const PostDetails = () => {
       likesArray.push(user.$id);
     }
 
-    likePost({postId:post.$id ,likesArray:likesArray});
+    likePost({ postId: post.$id, likesArray: likesArray });
     setLikes(likesArray);
   };
 
@@ -63,7 +64,7 @@ const PostDetails = () => {
       return;
     }
 
-    savePost({postId:post.$id , userId:user.$id});
+    savePost({ postId: post.$id, userId: user.$id });
     setIsSaved(true);
   };
 
@@ -72,9 +73,9 @@ const PostDetails = () => {
   };
 
   const handleDeletePost = () => {
-    deletePost({id:id,fileId:post.imageId});
-    navigate('/')
-  }
+    deletePost({ id: id, fileId: post.imageId });
+    navigate("/");
+  };
 
   function formatRelativeDate(dateString) {
     const date = new Date(dateString);
@@ -184,27 +185,27 @@ const PostDetails = () => {
             </div>
             <div className="flex w-full justify-between">
               <div className="flex items-center gap-2">
-                <img
-                  onClick={(e) => handleLikePost(e)}
-                  src={checkIsLiked() ? liked : like}
-                  width={24}
-                  height={24}
-                  alt="saved"
-                  className="cursor-pointer"
-                />
+                {isPending ? (
+                  <img src={loader} width={24} height={24} alt="liked" />
+                ) : (
+                  <img
+                    onClick={(e) => handleLikePost(e)}
+                    src={checkIsLiked() ? liked : like}
+                    width={24}
+                    height={24}
+                    alt="liked"
+                    className="cursor-pointer"
+                  />
+                )}
                 <span className="text-sm text-gray-300">
                   {" "}
                   {likes?.length} likes
                 </span>
               </div>
               <div>
-              {isSaving || isUnsaving ?(
-                    <img
-                    src={loader}
-                    width={24}
-                    height={24}
-                    alt="saved"/>
-                ):(
+                {isSaving || isUnsaving ? (
+                  <img src={loader} width={24} height={24} alt="saved" />
+                ) : (
                   <img
                     onClick={handleSavePost}
                     src={isSaved ? saved : save}

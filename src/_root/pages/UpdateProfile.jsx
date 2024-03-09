@@ -1,6 +1,6 @@
 import React from "react";
 import edit from "../../assets/edit.svg"
-import ProfileForm from "../../components/ProfileForm";
+
 
 const UpdateProfile = () => {
   return (
@@ -12,7 +12,7 @@ const UpdateProfile = () => {
             Edit Post
           </span>
         </div>
-        <ProfileForm/>
+        
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const AllUsers = () => {
   const { data: creators, isLoading } = useGetUsers();
 
   return (
-    <div className="flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar">
+    <div className="flex flex-col flex-1 items-center gap-10 overflow-y-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar">
       <div className="max-w-5xl flex flex-col items-start w-full gap-6 md:gap-9">
         <h2 className="text-[24px] font-bold leading-[140%] tracking-tighter md:text-[30px] text-left w-full">All Users</h2>
         {isLoading && !creators ? (

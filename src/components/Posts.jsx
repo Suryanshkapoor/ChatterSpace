@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 const Posts = ({ post, showUser, showStats }) => {
   const { mutate: savePost, isPending: isSaving } = useSavePost();
   const { mutate: unsavePost, isPending: isUnsaving } = useUnsavePost();
-  const { mutate: likePost } = useLikePost();
+  const { mutate: likePost, isPending } = useLikePost();
 
   const { data: user } = useGetCurrentUser();
 
@@ -28,7 +28,7 @@ const Posts = ({ post, showUser, showStats }) => {
     setIsSaved(savedPostRecord ? true : false);
   }, [user]);
 
-  const likesList = post.likes?.map((user) => user?.$id);
+  let likesList = post.likes?.map((user) => user?.$id);
 
   const [likes, setLikes] = useState(likesList);
   const [isSaved, setIsSaved] = useState(false);
@@ -84,22 +84,21 @@ const Posts = ({ post, showUser, showStats }) => {
         )}
         {showStats && (
           <div className="flex items-center gap-3 mt-2">
-            <img
-              onClick={(e) => handleLikePost(e)}
-              src={checkIsLiked() ? liked : like}
-              width={24}
-              height={24}
-              alt="saved"
-              className="cursor-pointer"
-            />
-
-            {isSaving || isUnsaving ? (
+            {isPending ? (
+              <img src={loader} width={24} height={24} alt="liked" />
+            ) : (
               <img
-                src={loader}
+                onClick={(e) => handleLikePost(e)}
+                src={checkIsLiked() ? liked : like}
                 width={24}
                 height={24}
-                alt="saved"
+                alt="liked"
+                className="cursor-pointer"
               />
+            )}
+
+            {isSaving || isUnsaving ? (
+              <img src={loader} width={24} height={24} alt="saved" />
             ) : (
               <img
                 onClick={handleSavePost}

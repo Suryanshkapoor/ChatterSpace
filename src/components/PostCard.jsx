@@ -17,9 +17,9 @@ import {
 } from "../react-query/queriesAndMutations";
 
 const PostCard = ({ post, userId }) => {
-  const { mutate: savePost ,isPending: isSaving} = useSavePost();
+  const { mutate: savePost, isPending: isSaving } = useSavePost();
   const { mutate: unsavePost, isPending: isUnsaving } = useUnsavePost();
-  const { mutate: likePost } = useLikePost();
+  const { mutate: likePost, isPending } = useLikePost();
 
   const { data: user } = useGetCurrentUser();
 
@@ -139,37 +139,36 @@ const PostCard = ({ post, userId }) => {
             <div className="flex justify-between items-center">
               <div className="flex w-full justify-between">
                 <div className="flex items-center  gap-2">
-                  <img
-                    onClick={(e) => handleLikePost(e)}
-                    src={checkIsLiked() ? liked : like}
-                    width={24}
-                    height={24}
-                    alt="saved"
-                    className="cursor-pointer"
-                  />
+                  {isPending ? (
+                    <img src={loader} width={24} height={24} alt="liked" />
+                  ) : (
+                    <img
+                      onClick={(e) => handleLikePost(e)}
+                      src={checkIsLiked() ? liked : like}
+                      width={24}
+                      height={24}
+                      alt="liked"
+                      className="cursor-pointer"
+                    />
+                  )}
                   <span className="text-sm text-gray-300">
                     {" "}
                     {likes.length} likes
                   </span>
                 </div>
                 <div>
-                {isSaving || isUnsaving ?(
+                  {isSaving || isUnsaving ? (
+                    <img src={loader} width={24} height={24} alt="saved" />
+                  ) : (
                     <img
-                    src={loader}
-                    width={24}
-                    height={24}
-                    alt="saved"/>
-                ):(
-                  <img
-                    onClick={handleSavePost}
-                    src={isSaved ? saved : save}
-                    width={24}
-                    height={24}
-                    alt="saved"
-                    className="cursor-pointer"
-                  />
-                )}
-                  
+                      onClick={handleSavePost}
+                      src={isSaved ? saved : save}
+                      width={24}
+                      height={24}
+                      alt="saved"
+                      className="cursor-pointer"
+                    />
+                  )}
                 </div>
               </div>
             </div>

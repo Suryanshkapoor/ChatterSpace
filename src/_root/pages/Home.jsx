@@ -25,7 +25,6 @@ const Home = () => {
                 alt="loader"
                 width={35}
                 height={35}
-                className="animate-spin"
               />
             </div>
           ) : (

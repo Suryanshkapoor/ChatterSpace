@@ -135,9 +135,22 @@ const Profile = () => {
             </ul>
           }
         />
-        {currentUser.$id === user.id && (
-          <Route path="/liked-posts" element={<LikedPosts />} />
-        )}
+        {currentUser.$id === user.id &&
+          (currentUser.liked.length !== 0 ? (
+            
+              <Route
+                path="/liked-posts"
+                element={
+                  <ul className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl mb-14">
+                    {currentUser.liked.map((post) => 
+                    <LikedPosts key={post.$id} id={post.$id} />
+                    )}
+                  </ul>
+                }
+              />
+            ) : (
+            <p className="text-gray-400">No liked posts</p>
+          ))}
       </Routes>
       <Outlet />
     </div>
