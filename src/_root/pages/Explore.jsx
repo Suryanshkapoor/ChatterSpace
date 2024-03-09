@@ -15,19 +15,19 @@ import Posts from "../../components/Posts";
 import { useInView } from "react-intersection-observer";
 
 const Explore = () => {
-  const{ref, inView} = useInView();
+  const { ref, inView } = useInView();
   const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
-  const { data: searchedPosts, isFetching: isFetching } = useSearchPosts(debouncedValue)
+  const { data: searchedPosts, isFetching: isFetching } = useSearchPosts(debouncedValue);
 
   useEffect(() => {
     if (inView && !searchValue) {
       fetchNextPage();
     }
   }, [inView, searchValue]);
-  
+
   if (!posts) {
     return (
       <div className="flex flex-1 flex-col items-center mt-14">
@@ -37,9 +37,6 @@ const Explore = () => {
   }
 
   const shouldShowSearchResults = searchValue !== "";
-  const shouldShowPosts =
-    !shouldShowSearchResults &&
-    posts.pages.every((item) => item.documents.length === 0);
 
   return (
     <div className="flex flex-col flex-1 items-center overflow-y-scroll py-10 px-5 md:p-14 custom-scrollbar">
@@ -71,31 +68,23 @@ const Explore = () => {
       </div>
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
         {shouldShowSearchResults ? (
-          <SearchResults 
-          isFetching = { isFetching }
-          searchedPosts = { searchedPosts } 
-          />
-        ) : shouldShowPosts ? (
-          <p className="text-light-4 mt-10 text-center w-full">End of posts</p>
+          <SearchResults isFetching={isFetching} searchedPosts={searchedPosts} />
         ) : (
-          posts.pages.map((item, index) => (
-            <ul
-              key={`page-${index}`}
-              className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl mb-10"
-            >
-              {item.documents.map((post) => (
+          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl mb-10">
+            {posts.pages.map((page, pageIndex) =>
+              page.documents.map((post) => (
                 <Posts showUser={true} showStats={true} key={post.$id} post={post} />
-              ))}
-            </ul>
-          ))
+              ))
+            )}
+          </ul>
         )}
       </div>
-      {hasNextPage &&!searchValue &&(
-        <div ref={ref} >
+      {hasNextPage && !searchValue && (
+        <div ref={ref}>
           <img src={loader} width={40} height={40} alt="loading" />
         </div>
       )}
-      {!hasNextPage && !searchValue &&(
+      {!hasNextPage && !searchValue && (
         <p className="text-sm text-violet-600">Wow! You have reached the end</p>
       )}
     </div>

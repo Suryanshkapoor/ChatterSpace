@@ -292,7 +292,7 @@ export async function getPostbyId(postId) {
 }
 
 export async function getInfinitePosts(pageParam) {
-  const queries = [Query.orderDesc("$updatedAt"), Query.limit(1)];
+  const queries = [Query.orderDesc("$updatedAt"), Query.limit(2)];
 
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
@@ -314,6 +314,8 @@ export async function getInfinitePosts(pageParam) {
 export async function searchPosts(searchTerm) {
   const query1 = [Query.search("caption", searchTerm)];
   const query2 = [Query.search("location", searchTerm)];
+  const query3 = [Query.search("tags", searchTerm)];
+
   try {
     const posts1 = await databases.listDocuments(
       appwriteConfig.databaseId,
@@ -325,10 +327,21 @@ export async function searchPosts(searchTerm) {
       appwriteConfig.postsCollectionId,
       query2
     );
-    const uniquePostIds = new Set([
-      ...posts1.documents.map((post) => post.$id),
-      ...posts2.documents.map((post) => post.$id),
-    ]);
+    const posts3 = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      query3
+    );
+
+    const allPosts = [
+      ...posts1.documents,
+      ...posts2.documents,
+      ...posts3.documents,
+    ];
+
+    // Filter out duplicate posts
+    const uniquePostIds = new Set(allPosts.map((post) => post.$id));
+
     const uniquePosts = [];
 
     for (const postId of uniquePostIds) {
