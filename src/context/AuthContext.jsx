@@ -30,14 +30,13 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(
-      localStorage.getItem('cookieFallback')==='[]' ||
-      localStorage.getItem('cookieFallback')===null
-    ){navigate('/sign-up');}
-    
+    const cookieFallback = localStorage.getItem('cookieFallback');
+    if (cookieFallback !== '[]' && cookieFallback !== null) {
+      navigate('/sign-up');
+    } else {
       checkAuthUser();
-    
-  },)
+    }
+  },[]);
   
   const checkAuthUser = async() =>{
     try {
