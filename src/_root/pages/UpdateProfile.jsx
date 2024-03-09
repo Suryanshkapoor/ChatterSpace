@@ -7,6 +7,7 @@ import {
   useUpdateUser,
 } from "../../react-query/queriesAndMutations";
 import ProfileUploader from "../../components/ProfileUploader";
+import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
   const { data: user } = useGetCurrentUser();
@@ -15,6 +16,8 @@ const UpdateProfile = () => {
 
   const [mediaUrl, setMediaUrl] = useState(user?.imageUrl);
   const [file, setFile] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMediaUrl(user?.imageUrl)
@@ -28,16 +31,30 @@ const UpdateProfile = () => {
     const values = Object.fromEntries(data.entries());
 
     const newuser= await updateUser({
-      id: user?.id,
+      userId: user?.$id,
       name: values.name,
-      email: values.email,
-      imageUrl: values.imageUrl,
+      email: user.email,
+      imageUrl: user?.imageUrl,
       bio: values.bio,
       file: file
     })
+    if(newuser){
+      navigate(`/profile/${newuser?.$id}`);
+    }
   }
 
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    navigate(`/profile/${user?.$id}`)
+  };
+
+  const handleDelete = async() => {
+    const result = await deleteUser({
+      id: user?.id
+    })
+    if(result){
+      navigate('/sign-up')
+    }
+  }
 
   return (
     <div className="flex flex-1 md:overflow-y-scroll custom-scrollbar">
@@ -108,7 +125,7 @@ const UpdateProfile = () => {
               <button
                 type="button"
                 className="py-2 px-5 mb-2 text-sm font-medium rounded-lg border bg-rose-500  border-gray-600 text-white hover:bg-rose-700"
-                onClick={() => handleCancel()}
+                onClick={() => handleDelete()}
               >
                 Delete
               </button>

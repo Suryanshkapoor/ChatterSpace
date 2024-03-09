@@ -292,7 +292,7 @@ export async function getPostbyId(postId) {
 }
 
 export async function getInfinitePosts(pageParam) {
-  const queries = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+  const queries = [Query.orderDesc("$updatedAt"), Query.limit(1)];
 
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
@@ -400,6 +400,7 @@ export async function getUserById(userId) {
 }
 
 export async function updateUser(user) {
+  console.log(user);
   const hasFileToUpdate = user.file.length > 0;
   try {
     let image = {
@@ -413,13 +414,14 @@ export async function updateUser(user) {
       if (!uploadedFile) throw Error;
 
       // Get new file url
-      const fileUrl = getFilePreview(uploadedFile.$id);
+      const fileUrl = await getFilePreview(uploadedFile.$id);
+      console.log(fileUrl);
       if (!fileUrl) {
         await deleteFile(uploadedFile.$id);
         throw Error;
       }
 
-      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+      image = { imageUrl: fileUrl, imageId: uploadedFile.$id };
     }
 
     //  Update user

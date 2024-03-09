@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import search from "../../assets/search.svg";
 import filter from "../../assets/filter.svg";
@@ -12,13 +12,21 @@ import {
 import useDebounce from "../../hooks/useDebounce";
 import Posts from "../../components/Posts";
 
+import { useInView } from "react-intersection-observer";
 
 const Explore = () => {
+  const{ref, inView} = useInView();
   const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
   const { data: searchedPosts, isFetching: isFetching } = useSearchPosts(debouncedValue)
+
+  useEffect(() => {
+    if (inView && !searchValue) {
+      fetchNextPage();
+    }
+  }, [inView, searchValue]);
   
   if (!posts) {
     return (
@@ -73,7 +81,7 @@ const Explore = () => {
           posts.pages.map((item, index) => (
             <ul
               key={`page-${index}`}
-              className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl mb-14"
+              className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl mb-10"
             >
               {item.documents.map((post) => (
                 <Posts showUser={true} showStats={true} key={post.$id} post={post} />
@@ -82,6 +90,14 @@ const Explore = () => {
           ))
         )}
       </div>
+      {hasNextPage &&!searchValue &&(
+        <div ref={ref} >
+          <img src={loader} width={40} height={40} alt="loading" />
+        </div>
+      )}
+      {!hasNextPage && !searchValue &&(
+        <p className="text-sm text-violet-600">Wow! You have reached the end</p>
+      )}
     </div>
   );
 };
