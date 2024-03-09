@@ -7,7 +7,7 @@ const ProfileUploader = ({ setFile, mediaUrl, setMediaUrl }) => {
       setFile(acceptedFiles);
       setMediaUrl(URL.createObjectURL(acceptedFiles[0]));
     },
-    [setFile]
+    [setFile, setMediaUrl]
   );
 
   const { getRootProps, getInputProps } = useDropzone({

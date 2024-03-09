@@ -14,8 +14,8 @@ const Topbar = () => {
 	const { user }= useUserContext();
 
 	useEffect(()=>{
-		if(isSuccess)navigate(0);
-	},[isSuccess])
+		if(isSuccess)navigate('/sign-in');
+	},[isSuccess,navigate]);
 
   return (
     <section className="bg-zinc-950 sticky top-0 z-50 w-full md:hidden ">

@@ -14,8 +14,8 @@ const LeftSidebar = () => {
   const navigate = useNavigate();
 
   useEffect(()=>{
-		if(isSuccess)navigate(0);
-	},[isSuccess])
+		if(isSuccess)navigate('/sign-in');
+	},[isSuccess, navigate])
 
   return (
     <nav className="hidden md:flex px-3 py-10 flex-col justify-between min-w-[220px] bg-zinc-950">

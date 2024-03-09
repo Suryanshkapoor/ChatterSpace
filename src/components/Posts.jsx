@@ -26,7 +26,7 @@ const Posts = ({ post, showUser, showStats }) => {
 
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
-  }, [user]);
+  }, [user,savedPostRecord]);
 
   let likesList = post.likes?.map((user) => user?.$id);
 

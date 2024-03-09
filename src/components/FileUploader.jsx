@@ -8,7 +8,7 @@ const FileUploader = ({  setFile, mediaUrl, setMediaUrl}) => {
   const onDrop = useCallback((acceptedFiles) => {
     setFile(acceptedFiles)
     setMediaUrl(URL.createObjectURL(acceptedFiles[0]))
-  },[setFile]);
+  },[setFile,setMediaUrl]);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".svg"] },

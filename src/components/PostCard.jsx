@@ -29,7 +29,7 @@ const PostCard = ({ post, userId }) => {
 
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
-  }, [user]);
+  }, [user, savedPostRecord]);
 
   const likesList = post.likes.map((user) => user.$id);
 

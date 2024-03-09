@@ -5,9 +5,7 @@ import PostCard from "../../components/PostCard";
 import { useUserContext } from "../../context/AuthContext";
 
 const Home = () => {
-  const{ data : posts, isPending: isLoading
-    , isError:error 
-  } = useGetRecentPosts();
+  const{ data : posts, isPending: isLoading } = useGetRecentPosts();
 
   const{ user } =useUserContext();
   
