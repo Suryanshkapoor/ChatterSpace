@@ -455,3 +455,17 @@ export async function updateUser(user) {
     console.log(error);
   }
 }
+
+export async function deleteUser(userId) {
+  try {
+    const statusCode = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId
+    );
+    if (!statusCode) throw Error;
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}

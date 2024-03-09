@@ -9,6 +9,7 @@ import {
   createPost,
   createUserAccount,
   deletePost,
+  deleteUser,
   getCurrentUser,
   getInfinitePosts,
   getPostbyId,
@@ -214,3 +215,15 @@ export const useUpdateUser = () => {
     },
   });
 };
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId) => deleteUser(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
+}
