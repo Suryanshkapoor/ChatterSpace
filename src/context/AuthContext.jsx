@@ -30,14 +30,17 @@ const AuthProvider = ({ children }) => {
   const navigateRef = useRef(navigate); // Create a stable reference to navigate
 
   useEffect(() => {
-    const { current: navigate } = navigateRef; // Destructure the current value from the ref
-    const cookieFallback = localStorage.getItem('cookieFallback');
-    if (cookieFallback !== '[]' && cookieFallback !== null) {
-      navigate('/sign-up');
-    } 
-    navigate('/');
+    const { current: navigate } = navigateRef;
+    const cookieFallback = localStorage.getItem("cookieFallback");
+    if (
+      cookieFallback === "[]" ||
+      cookieFallback === null ||
+      cookieFallback === undefined
+    ) {
+      navigate("/sign-in");
+    }
+
     checkAuthUser();
-      
   }, [navigateRef]);
 
   const checkAuthUser = async () => {
