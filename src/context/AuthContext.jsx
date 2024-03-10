@@ -34,9 +34,10 @@ const AuthProvider = ({ children }) => {
     const cookieFallback = localStorage.getItem('cookieFallback');
     if (cookieFallback !== '[]' && cookieFallback !== null) {
       navigate('/sign-up');
-    } else {
-      checkAuthUser();
-    }
+    } 
+    navigate('/');
+    checkAuthUser();
+      
   }, [navigateRef]);
 
   const checkAuthUser = async () => {
