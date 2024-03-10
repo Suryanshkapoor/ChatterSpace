@@ -26,16 +26,18 @@ const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const navigate = useNavigate(); // Create a stable reference to navigate
+  const navigate = useNavigate();
+  const navigateRef = useRef(navigate); // Create a stable reference to navigate
 
   useEffect(() => {
+    const { current: navigate } = navigateRef; // Destructure the current value from the ref
     const cookieFallback = localStorage.getItem('cookieFallback');
     if (cookieFallback !== '[]' && cookieFallback !== null) {
       navigate('/sign-up');
     } else {
       checkAuthUser();
     }
-  }, []);
+  }, [navigateRef]);
 
   const checkAuthUser = async () => {
     try {
